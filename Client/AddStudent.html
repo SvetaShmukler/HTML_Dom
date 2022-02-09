@@ -1,0 +1,34 @@
+<html>
+   <body>
+    Full Name: <input type="text" id="name"/><br/><br/>
+    Faculty: <input type="text" id="faculty"/><br/><br/>
+    Bith Date: <input type="date" id="birthDate"/><br/><br/>
+    E-MAIL: <input type="email" id="email"/><br/>
+    <br/>
+    <button onclick = "addStudent()">ADD</button>
+   </body>
+        <script>
+            const Url_Path = 'http://localhost:9000/students'            
+            const studentID = sessionStorage.getItem("id");
+
+            const addStudent = async() =>
+            {
+                const updateStudent = {
+                    FullName: document.getElementById('name').value,
+                    Faculty: document.getElementById('faculty').value,
+                    BirthDate: document.getElementById('birthDate').value,
+                    Email: document.getElementById('email').value,
+                }
+                const response = await fetch(`${Url_Path}`,{method:"post",headers:{"content-type": 'application/json'},body:JSON.stringify(updateStudent)})
+                
+                if (response.ok)
+                {
+                    const data = await response.json();
+                    console.log(data);
+                    window.location.href = "Main.html"
+                }
+            }
+
+        </script>
+   
+</html>

@@ -1,0 +1,50 @@
+{
+    "_id" : ObjectId("61acc035147c8538f9839c42"),
+    "FullName" : "Avi Cohen",
+    "Email" : "avi@gmail.com",
+    "Faculty" : "Engineering",
+    "BirthDate" : "25/1/1998",
+    "Exams" : [ 
+        {
+            "Name" : "Mathematics",
+            "Date" : "1/2/2020",
+            "Grade" : 90
+        }, 
+        {
+            "Name" : "Chemistry",
+            "Date" : "3/2/2020",
+            "Grade" : 99
+        }, 
+        {
+            "Name" : "Biology",
+            "Date" : "10/2/2020",
+            "Grade" : 100
+        }
+    ]
+}
+
+
+{
+    "_id" : ObjectId("61acc2d6147c8538f9839c9b"),
+    "FullName" : "Roni Levi",
+    "Email" : "roni@gmail.com",
+    "Faculty" : "Economic",
+    "BirthDate" : "17/5/1993",
+    "Exams" : [ 
+        {
+            "Name" : "Mathematics",
+            "Date" : "1/2/2020",
+            "Grade" : 79
+        }, 
+        {
+            "Name" : "Statistic",
+            "Date" : "11/1/2020",
+            "Grade" : 85
+        }, 
+        {
+            "Name" : "Managment",
+            "Date" : "3/2/2020",
+            "Grade" : 100
+        }
+    ]
+}

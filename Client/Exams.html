@@ -1,0 +1,182 @@
+<html>
+    <body onload = "getExams()">
+        <h1 id="studentName"></h1>
+        <table id = "table" border = "1">
+            <tr>
+                <th>Name of Exam</th>
+                <th>The Date of Exam</th>
+                <th>The Grade</th>
+                <th>Update</th>
+            </tr>
+             </table><br/>
+             Add Exam: <button onclick="addExam()">ADD</button><br/><br/>
+             
+            
+             <div id = "AddExamDiv" style = "display:none;">
+                Name of Exam: <input type="text" id="examName"/><br/><br/>
+                Date of Exam: <input type="date" id="examDate"/><br/><br/>
+                Grade: <input type="number" id="newGrade"/><br/><br/>
+                <button onclick= "updateNew()">Update</button>
+
+             </div>
+
+
+             <div id = "EditExamDiv" style = "display:none;">
+                Name of Exam: <input type="text" id="EditExamName"/><br/><br/>
+                Date of Exam: <input type="date" id="EditExamDate"/><br/><br/>
+                Grade: <input type="number" id="EditExamGrade"/><br/><br/>
+                <button id ="update" onclick= "updateExam()">Update</button>
+
+             </div>
+             
+            
+             
+    </body>
+    <script>
+
+        const Url_Path = 'http://localhost:9000/students'            
+        const studentID = sessionStorage.getItem("id");
+
+        const getExams = async() => 
+            {
+                const response = await fetch(`${Url_Path}/${studentID}`)
+                if(response.ok)
+                {
+                    const student = await response.json();
+                    
+                    const tableElem = document.getElementById("table")
+
+
+                    document.getElementById('studentName').innerText = `${student.FullName}'s exams:`
+                    
+                    var index = 0;
+                    
+                    student.Exams.map( exam => 
+                    {
+                     
+
+                        const trElem = document.createElement("tr")
+                        
+                        const tdNameExam = document.createElement("td")
+                        const tdDate= document.createElement("td")
+                        const tdGrade = document.createElement("td")
+                        const tdEditBtn = document.createElement("td")
+                       
+                        const editBtnElem = document.createElement("button")
+                        editBtnElem.value = index
+
+
+                        const newdate = new Date(exam.Date)
+                        const day = newdate.getDate() < 10? `0${newdate.getDate()}`: newdate.getDate()
+                        const month = newdate.getMonth()+1 < 10? `0${newdate.getMonth()+1}`: newdate.getMonth()+1
+                        const finaldate = `${newdate.getFullYear()}-${month}-${day}`
+
+                        tdNameExam.innerHTML = exam.Name
+                        tdDate.innerHTML = finaldate
+                        tdGrade.innerHTML = exam.Grade
+
+                        editBtnElem.innerText = "Edit"
+                        editBtnElem.setAttribute('onclick','showUpdateExam(value)')
+
+                        tdEditBtn.appendChild(editBtnElem)
+
+                        trElem.appendChild(tdNameExam)
+                        trElem.appendChild(tdDate)
+                        trElem.appendChild(tdGrade)
+                        trElem.appendChild(tdEditBtn)
+
+                        tableElem.appendChild(trElem)
+
+                        index++
+                    })
+                }
+            }
+            
+           
+            
+            const addExam = async()=>
+            {
+                document.getElementById("AddExamDiv").style.display = "block"
+            }
+
+
+            const updateNew = async()=>
+            {
+
+                const response = await fetch(`${Url_Path}/${studentID}`)
+                
+                const student = await response.json();
+                    
+                const allExams = student.Exams
+                
+                const newExam = {
+                    Name:document.getElementById('examName').value,
+                    Date:document.getElementById('examDate').value,
+                    Grade:document.getElementById('newGrade').value,
+                }
+
+                allExams.push(newExam);
+                
+
+                const response2 = await fetch(`${Url_Path}/${studentID}`,{method:"put",headers:{"content-type": 'application/json'},body:JSON.stringify(student)})
+                
+                if (response2.ok)
+                {
+                    const data = await response2.json();
+                    console.log(data);
+                    window.location.reload()
+                }
+  
+            }
+
+            const showUpdateExam = async(index) => 
+            {
+                //console.log(index)
+                const response = await fetch(`${Url_Path}/${studentID}`)
+                if (response.ok)
+                {
+                    const student = await response.json();
+                    
+                    document.getElementById('EditExamDiv').style = "display: block"
+                    
+                    document.getElementById('EditExamName').value = student.Exams[index].Name
+                    
+                    const newdate = new Date(student.Exams[index].Date)
+                    const day = newdate.getDate() < 10? `0${newdate.getDate()}`: newdate.getDate()
+                    const month = newdate.getMonth()+1 < 10? `0${newdate.getMonth()+1}`: newdate.getMonth()+1
+                    const finaldate = `${newdate.getFullYear()}-${month}-${day}`
+
+                    document.getElementById('EditExamDate').value = finaldate
+                    document.getElementById('EditExamGrade').value = student.Exams[index].Grade
+                    document.getElementById('update').value = index
+                }
+            }
+
+            const updateExam = async() =>
+            {
+                let index = document.getElementById('update').value
+                const response = await fetch(`${Url_Path}/${studentID}`)
+
+            if (response.ok) {
+                const student = await response.json();
+                //console.log(document.getElementById('update').value)
+                student.Exams[document.getElementById('update').value].Name = document.getElementById('EditExamName').value
+                student.Exams[document.getElementById('update').value].Date = document.getElementById('EditExamDate').value
+                student.Exams[document.getElementById('update').value].Grade = document.getElementById('EditExamGrade').value
+                //console.log(student)
+
+                const response2 = await fetch(`${Url_Path}/${studentID}`, {
+                method: "put",
+                headers: { "content-type": 'application/json' },
+                body: JSON.stringify(student)
+            });
+                if (response2.ok) {
+                const data = await response2.json();
+                console.log(data);
+                window.location.reload()
+            }
+        }
+    }
+
+    </script>
+</html>

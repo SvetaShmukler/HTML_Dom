@@ -1,0 +1,62 @@
+<html>
+    <body onload="getDataForUpdate()">
+        Full Name: <input type="text" id="name"/><br/><br/>
+        Faculty: <input type="text" id="faculty"/><br/><br/>
+        Bith Date: <input type="date" id="birthDate"/><br/><br/>
+        E-MAIL: <input type="email" id="email"/><br/<br/>>
+
+        <button onclick="updateData()">Update</button>
+    
+    </body>
+
+    <script>
+
+        const Url_Path = 'http://localhost:9000/students'
+        const studentID = sessionStorage.getItem('id');
+
+        const getDataForUpdate = async () => {
+            const reponse = await fetch(`${Url_Path}/${studentID}`)
+            if (reponse.ok)
+            {
+                const student = await reponse.json();
+                document.getElementById("name").value = student.FullName
+                document.getElementById("faculty").value = student.Faculty
+                document.getElementById("email").value = student.Email
+          
+                const newdate = new Date(student.BirthDate)
+                const day = newdate.getDate() < 10? `0${newdate.getDate()}`: newdate.getDate()
+                const month = newdate.getMonth()+1 < 10? `0${newdate.getMonth()+1}`: newdate.getMonth()+1
+                const finaldate = `${newdate.getFullYear()}-${month}-${day}`
+                document.getElementById("birthDate").value =finaldate        
+                //document.getElementById("birthDate").value = `${newdate.getFullYear()}-${newdate.getMonth()+1}-${newdate.getDate()}`
+            }
+        }
+
+        const updateData = async () =>
+        {
+            const updateStudent =  {
+                FullName: document.getElementById('name').value,
+                Faculty: document.getElementById('faculty').value,
+                BithDate: document.getElementById('birthDate').value,
+                Email: document.getElementById('email').value,
+            }
+
+
+            const response = await fetch (`${Url_Path}/${studentID}`, {
+                method:"put",
+                headers: { "content-type": 'application/json'},
+                body: JSON.stringify(updateStudent)
+            })
+                
+                if (response.ok)
+                {
+                    const data = await response.json();
+                    console.log(data);
+                    window.location.href = "Main.html"
+                }
+
+        }
+
+
+    </script>
+</html>

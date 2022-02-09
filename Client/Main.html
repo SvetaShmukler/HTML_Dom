@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <title>All Students</title>
+        <link rel="stylesheet" href="style.css">
+
+
+    </head>
+    <body onload="getTable()">
+        <h1>Students:</h1><br/>
+        <table id = "tbl" border = "1" align="center">
+        <tr>
+            <colgroup>
+                <col style="background:Khaki">
+                <col span="4" style="background: lightblue">
+              </colgroup>
+            <th>Full Name</th>
+            <th>Faculty</th>
+            <th>Exams</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+         </table><br/>
+        <button style="background-color: khaki; margin:auto; display:block" onclick="addStudent()">ADD STUDENT</button>
+        <script>
+            
+            const Url_Path = 'http://localhost:9000/students'
+            
+            const getTable = async() => 
+            {
+                const tableElem = document.getElementById("tbl")
+                const response = await fetch(Url_Path);
+
+                if(response.ok)
+                {
+                    const students = await response.json();
+                    
+                    students.map( student => 
+                    {
+                        const trElem = document.createElement("tr")
+                        
+                        const tdName = document.createElement("td")
+                        const tdFaculty = document.createElement("td")
+                        const tdExams = document.createElement("td")
+                        const tdEditBtn = document.createElement("td")
+                        const tdDeleteBtn = document.createElement("td")
+
+                        
+                        const editBtnElem = document.createElement("button")
+                        editBtnElem.style.backgroundColor="blue"
+                        const deleteBtnElem = document.createElement("button")
+                        deleteBtnElem.style.backgroundColor="red"
+                        
+                        tdName.value = student._id
+                        tdName.setAttribute('onclick','sendToStudent(value)')
+                        
+                        
+                        tdExams.innerText = "Grades"
+                        tdExams.value = student._id
+                        tdExams.setAttribute('onclick','sendToExams(value)')
+                        
+                        editBtnElem.innerText = "Edit"
+                        //document.getElementsByName("editBtn").style.backgroundColor="blue"
+
+                        editBtnElem.onclick = () => editStudent(student._id)
+
+                        deleteBtnElem.innerText = "Delete"
+                        deleteBtnElem.onclick = () => deleteStudent(student._id)
+
+                        tdName.innerHTML = student.FullName
+                    
+                        
+                        //document.getElementsByTagNames("tdName").style.textDecorationUnderline
+                        
+                        //tdName.style.textDecorationUnderline
+                        tdFaculty.innerHTML = student.Faculty
+                        
+                        tdEditBtn.appendChild(editBtnElem)
+                        tdDeleteBtn.appendChild(deleteBtnElem)
+
+                        trElem.appendChild(tdName)
+                        trElem.appendChild(tdFaculty)
+                        trElem.appendChild(tdExams)
+                        trElem.appendChild(tdEditBtn)
+                        trElem.appendChild(tdDeleteBtn)
+
+                        tableElem.appendChild(trElem)
+
+                    })
+                }
+            }
+
+            const deleteStudent = async(id)=>
+            {
+                const response = await fetch(`${Url_Path}/${id}`,{method:"delete"})
+                if (response.ok)
+                {
+                    const data = await response.json()
+                    console.log(data)
+                    window.location.reload()
+                }
+            }
+
+            const sendToStudent = async(id) =>
+            {
+                sessionStorage.setItem('id',id)
+                window.location.href = "Student_data.html"
+            }
+
+            const sendToExams = async(id) =>
+            {
+                sessionStorage.setItem('id',id)
+                window.location.href = "Exams.html"
+            }
+
+            const addStudent = async() =>
+            {
+                window.location.href = "AddStudent.html"
+            }
+
+            const editStudent = async(id) =>
+            {
+                sessionStorage.setItem('id',id)
+                window.location.href = "UpdateStudent.html"
+            }
+
+
+        </script>
+    </body>
+</html>
