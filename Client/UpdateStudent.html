@@ -1,47 +1,50 @@
 <html>
+    <head>
+        <title>Update student</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
     <body onload="getDataForUpdate()">
         Full Name: <input type="text" id="name"/><br/><br/>
         Faculty: <input type="text" id="faculty"/><br/><br/>
         Bith Date: <input type="date" id="birthDate"/><br/><br/>
-        E-MAIL: <input type="email" id="email"/><br/<br/>>
-
-        <button onclick="updateData()">Update</button>
-    
+        E-MAIL: <input type="email" id="email"/><br/<br/>
+        <br/><button style="background-color: khaki ; margin:auto; display:block" onclick="updateData()">Update</button>
     </body>
 
     <script>
-
-        const Url_Path = 'http://localhost:9000/students'
+        //to get data of students:
+        const Url_Path = 'http://localhost:9000/students';
         const studentID = sessionStorage.getItem('id');
-
+        //Function to display the data for update:
         const getDataForUpdate = async () => {
-            const reponse = await fetch(`${Url_Path}/${studentID}`)
+            const reponse = await fetch(`${Url_Path}/${studentID}`);
             if (reponse.ok)
             {
+                //geting data from inputs:
                 const student = await reponse.json();
-                document.getElementById("name").value = student.FullName
-                document.getElementById("faculty").value = student.Faculty
-                document.getElementById("email").value = student.Email
-          
-                const newdate = new Date(student.BirthDate)
-                const day = newdate.getDate() < 10? `0${newdate.getDate()}`: newdate.getDate()
-                const month = newdate.getMonth()+1 < 10? `0${newdate.getMonth()+1}`: newdate.getMonth()+1
-                const finaldate = `${newdate.getFullYear()}-${month}-${day}`
-                document.getElementById("birthDate").value =finaldate        
-                //document.getElementById("birthDate").value = `${newdate.getFullYear()}-${newdate.getMonth()+1}-${newdate.getDate()}`
+                document.getElementById("name").value = student.FullName;
+                document.getElementById("faculty").value = student.Faculty;
+                document.getElementById("email").value = student.Email;
+                //get date and transforming it for standart form for normal input of object data:
+                const newdate = new Date(student.BirthDate);
+                //Correction of the day and month if they specifieds in one digit:
+                const day = newdate.getDate() < 10? `0${newdate.getDate()}`: newdate.getDate();
+                const month = newdate.getMonth()+1 < 10? `0${newdate.getMonth()+1}`: newdate.getMonth()+1;
+                const finaldate = `${newdate.getFullYear()}-${month}-${day}`;
+                document.getElementById("birthDate").value =finaldate;        
             }
         }
 
         const updateData = async () =>
         {
+            //New object of updated student, geting value from inputs + update:
             const updateStudent =  {
                 FullName: document.getElementById('name').value,
                 Faculty: document.getElementById('faculty').value,
                 BithDate: document.getElementById('birthDate').value,
                 Email: document.getElementById('email').value,
             }
-
-
+            //add to data base by method POST:
             const response = await fetch (`${Url_Path}/${studentID}`, {
                 method:"put",
                 headers: { "content-type": 'application/json'},
@@ -52,9 +55,8 @@
                 {
                     const data = await response.json();
                     console.log(data);
-                    window.location.href = "Main.html"
+                    window.location.href = "Main.html";
                 }
-
         }
 
 

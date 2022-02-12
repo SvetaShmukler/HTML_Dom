@@ -1,12 +1,25 @@
 body {
     font-family: Arial, sans-serif; 
     font-size: 14pt; 
-    background-color: #a198a1; 
+    background-color: #47bfdd; 
     color: #333;
   }
   h1 {
-    color: #1f1c99;
+    color: #050436;
+    font-size: 30pt;
+    font-family: Georgia, serif; 
+    font-weight: normal;
+  }
+  h2 {
+    color: #050436;
     font-size: 24pt;
     font-family: Georgia, serif; 
     font-weight: normal;
+  }
+  h3 {
+    color: #050436;
+    font-size: 24pt;
+    font-family: Georgia, serif; 
+    font-weight: normal;
+    font-style: italic;
   }

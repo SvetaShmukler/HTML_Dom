@@ -2,11 +2,9 @@
     <head>
         <title>All Students</title>
         <link rel="stylesheet" href="style.css">
-
-
     </head>
     <body onload="getTable()">
-        <h1>Students:</h1><br/>
+        <br/><br/><h1 align = "center">Students</h1><br/>
         <table id = "tbl" border = "1" align="center">
         <tr>
             <colgroup>
@@ -20,109 +18,122 @@
             <th>Delete</th>
         </tr>
          </table><br/>
-        <button style="background-color: khaki; margin:auto; display:block" onclick="addStudent()">ADD STUDENT</button>
+        <button style="background-color: rgb(83, 128, 185); margin:auto; display:block" onclick="addStudent()">ADD STUDENT</button>
         <script>
             
-            const Url_Path = 'http://localhost:9000/students'
+            const Url_Path = 'http://localhost:9000/students' //to get data of students
+            
+            //Table with all students from DB:
             
             const getTable = async() => 
             {
-                const tableElem = document.getElementById("tbl")
-                const response = await fetch(Url_Path);
+                const tableElem = document.getElementById("tbl"); //creating table element
+                const response = await fetch(Url_Path)
 
                 if(response.ok)
                 {
                     const students = await response.json();
-                    
+                    //for each student:
                     students.map( student => 
                     {
-                        const trElem = document.createElement("tr")
-                        
-                        const tdName = document.createElement("td")
-                        const tdFaculty = document.createElement("td")
-                        const tdExams = document.createElement("td")
-                        const tdEditBtn = document.createElement("td")
-                        const tdDeleteBtn = document.createElement("td")
+                        const trElem = document.createElement("tr");//creating tr element of table
+                        //creating all td elements of table:
+                        const tdName = document.createElement("td");
+                        const tdFaculty = document.createElement("td");
+                        const tdExams = document.createElement("td");
+                        const tdEditBtn = document.createElement("td");
+                        const tdDeleteBtn = document.createElement("td");
 
+                        //creating Edit Button:
                         
-                        const editBtnElem = document.createElement("button")
-                        editBtnElem.style.backgroundColor="blue"
-                        const deleteBtnElem = document.createElement("button")
-                        deleteBtnElem.style.backgroundColor="red"
+                        const editBtnElem = document.createElement("button");
+                        editBtnElem.style.backgroundColor="khaki";
+                        editBtnElem.innerText = "Edit";
+                        editBtnElem.onclick = () => editStudent(student._id);
                         
-                        tdName.value = student._id
-                        tdName.setAttribute('onclick','sendToStudent(value)')
+                        //creating Delete Button:
                         
-                        
-                        tdExams.innerText = "Grades"
-                        tdExams.value = student._id
-                        tdExams.setAttribute('onclick','sendToExams(value)')
-                        
-                        editBtnElem.innerText = "Edit"
-                        //document.getElementsByName("editBtn").style.backgroundColor="blue"
+                        const deleteBtnElem = document.createElement("button");
+                        deleteBtnElem.style.backgroundColor="green";
+                        deleteBtnElem.innerText = "Delete";
+                        deleteBtnElem.onclick = () => deleteStudent(student._id);
 
-                        editBtnElem.onclick = () => editStudent(student._id)
+                        //td-faculity:
+                        tdFaculty.innerHTML = student.Faculty;
 
-                        deleteBtnElem.innerText = "Delete"
-                        deleteBtnElem.onclick = () => deleteStudent(student._id)
-
-                        tdName.innerHTML = student.FullName
-                    
+                        //adding value,link,atribute to td-name of student:
                         
-                        //document.getElementsByTagNames("tdName").style.textDecorationUnderline
+                        tdName.innerHTML = student.FullName;
+                        tdName.value = student._id;
+                        tdName.style.textDecoration = "underline";
+                        tdName.style.color = "blue";
+                        tdName.setAttribute('onclick','sendToStudent(value)');
                         
-                        //tdName.style.textDecorationUnderline
-                        tdFaculty.innerHTML = student.Faculty
+                        //adding value,link,atribute to td-grades of student:
+
+                        tdExams.style.textDecoration = "underline";
+                        tdExams.style.color = "blue";
+                        tdExams.innerText = "Grades";
+                        tdExams.value = student._id;
+                        tdExams.setAttribute('onclick','sendToExams(value)');
                         
-                        tdEditBtn.appendChild(editBtnElem)
-                        tdDeleteBtn.appendChild(deleteBtnElem)
+                        
+                        tdEditBtn.appendChild(editBtnElem);
+                        tdDeleteBtn.appendChild(deleteBtnElem);
 
-                        trElem.appendChild(tdName)
-                        trElem.appendChild(tdFaculty)
-                        trElem.appendChild(tdExams)
-                        trElem.appendChild(tdEditBtn)
-                        trElem.appendChild(tdDeleteBtn)
+                        trElem.appendChild(tdName);
+                        trElem.appendChild(tdFaculty);
+                        trElem.appendChild(tdExams);
+                        trElem.appendChild(tdEditBtn);
+                        trElem.appendChild(tdDeleteBtn);
 
-                        tableElem.appendChild(trElem)
+                        tableElem.appendChild(trElem);
 
-                    })
+                    });
                 }
             }
+
+            //delete student---->on click button DELETE(using method delete )
 
             const deleteStudent = async(id)=>
             {
                 const response = await fetch(`${Url_Path}/${id}`,{method:"delete"})
                 if (response.ok)
                 {
-                    const data = await response.json()
-                    console.log(data)
-                    window.location.reload()
+                    const data = await response.json();
+                    console.log(data);
+                    window.location.reload();
                 }
             }
 
+
+            // on click by each student name link ----> open window Student_data:
             const sendToStudent = async(id) =>
             {
-                sessionStorage.setItem('id',id)
-                window.location.href = "Student_data.html"
+               sessionStorage.setItem('id',id);
+               window.location.href = "Student_data.html";
             }
 
+            // on click by each students exam link ----> open window Exams:
             const sendToExams = async(id) =>
             {
-                sessionStorage.setItem('id',id)
-                window.location.href = "Exams.html"
+                sessionStorage.setItem('id',id);
+                window.location.href = "Exams.html";
             }
-
+            
+            // After click on button ADD ----> new window AddStudent:
+            
             const addStudent = async() =>
             {
-                window.location.href = "AddStudent.html"
+                window.location.href = "AddStudent.html";
             }
 
+             // After click on button Edit ----> new window UpdateStudent:
             const editStudent = async(id) =>
             {
-                sessionStorage.setItem('id',id)
-                window.location.href = "UpdateStudent.html"
+                sessionStorage.setItem('id',id);
+                window.location.href = "UpdateStudent.html";
             }
-
 
         </script>
     </body>

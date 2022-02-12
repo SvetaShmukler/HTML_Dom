@@ -1,44 +1,44 @@
 <html>
+    <head>
+        <title>Student's information</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
     <body onload = "getStudentData()">
-        
+    
         <h1 id = "studentName"></h1><br/>
         <h2 id = "studentFaculty"></h2><br/>
         <h2 id = "studentBirthDate"></h2><br/>
         <h3 id = "studentEmail" type = "email"></h3>
-
-     
-        
+    </body>
         <script>
-            const Url_Path = 'http://localhost:9000/students'            
+            //Getting data of students:
+            const Url_Path = 'http://localhost:9000/students';          
             const studentID = sessionStorage.getItem('id');
 
-
+            //geting data on load by id :
             const getStudentData = async() => 
             {
-                const response = await fetch(`${Url_Path}/${studentID}`)
+                const response = await fetch(`${Url_Path}/${studentID}`);
                 if(response.ok)
                 {
                     const student = await response.json();
-                    document.getElementById('studentName').innerText = `Full Name: ${student.FullName}`
-                    document.getElementById('studentFaculty').innerText = `Faculty: ${student.Faculty}`
+                    //get students Full Name:
+                    document.getElementById('studentName').innerText = `Full Name: ${student.FullName}`;
+                    //get faculty:
+                    document.getElementById('studentFaculty').innerText = `Faculty: ${student.Faculty}`;
+                    //get date and transforming it for standart form only for using Student Form:
                     const newDate = new Date(student.BirthDate)
+                    //Correction of the day and month if they specifieds in one digit:
                     const day = newDate.getDate() < 10? `0${newDate.getDate()}`: newDate.getDate()
                     const month = newDate.getMonth()+1 < 10? `0${newDate.getMonth()+1}`: newDate.getMonth()+1
+                    //Date output as day/month/year:
                     const finalDate = `${day}-${month}-${newDate.getFullYear()}`
 
                     document.getElementById('studentBirthDate').innerText = `Date of Birth: ${finalDate}`
+                    //get student e-mail:
                     document.getElementById('studentEmail').innerText = `E-MAIL: ${student.Email}`
-
                 }    
             }
 
-
-
-
-
-
-            
-
         </script>
-    </body>
 </html>
